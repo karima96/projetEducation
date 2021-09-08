@@ -78,7 +78,7 @@
 
                         @if (Route::has('password.request'))
                             <a class="btn btn-link" href="{{ route('password.request') }}">
-                                {{ __('Forgot Your Password?') }}
+                                {{ __('Mot de passe oublié?') }}
                             </a>
                         @endif
                     </div>
@@ -87,9 +87,6 @@
 
 
 
-            <p class="mb-1">
-                <a href="/forgot-password">Mot de passe oublié</a>
-            </p>
             <p class="mb-0">
                 <a href="/register" class="text-center">S'inscrire</a>
             </p>
