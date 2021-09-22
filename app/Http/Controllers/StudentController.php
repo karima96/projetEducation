@@ -9,10 +9,20 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $students = Student::join('users', 'users.id', '=', 'students.user_id')->where('users.role','Eleve')->orderBy('users.name','asc')->paginate(10);
-        return view('students.index',compact('students'));
+        if(auth()->user()->role=='Admin'){
+            $students = Student::with('User','bac')->paginate(10);
+            return view('students.index',compact('students'));
+        }
+        else{
+            return redirect('/')->with("alert","vous n'avez pas la permission pour cette page");
+        }
     }
 
 
@@ -78,5 +88,21 @@ class StudentController extends Controller
         $student->delete();
         $nom = $student->user->name;
         return back()->with("success","Etudiant nomé '$nom' supprimé");
+    }
+
+    public function bloquer(Request $request){
+        $student=Student::find($request->get('student_id'));
+        $student->update([
+            'blocked'=>1
+        ]);
+        return redirect('/admin/eleves');
+    }
+
+    public function debloquer(Request $request){
+        $student=Student::find($request->get('student_id'));
+        $student->update([
+            'blocked'=>0
+        ]);
+        return redirect('/admin/eleves');
     }
 }

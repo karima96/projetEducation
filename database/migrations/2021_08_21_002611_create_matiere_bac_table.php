@@ -15,8 +15,8 @@ class CreateMatiereBacTable extends Migration
     {
         Schema::create('matiere_bac', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('matiere_id')->constrained();
-            $table->foreignId('bac_id')->constrained();
+            $table->foreignId('matiere_id')->constrained('matieres');
+            $table->foreignId('bac_id')->constrained('bacs');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateMatiereBacTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('matiere_user');
+        Schema::dropIfExists('Matiere_bac');
     }
 }

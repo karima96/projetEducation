@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reclamation extends Model
+class Avi extends Model
 {
     use HasFactory;
-    protected $fillable = ["type","description","fichier","confirmed","user_id","reponse","etat"];
+    protected $fillable = ["note","user_id","support_id"];
+
     public function User(){
         return $this->belongsTo(User::class);
+    }
+
+    public function Support(){
+        return $this->belongsTo(Support::class);
     }
 }

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
 
-    /*public function __construct()
+    public function __construct()
     {
-        $this->middleware('auth');
-    }*/
+        $this->middleware('auth')->except('index');
+    }
 
 
     public function index()
@@ -28,13 +28,15 @@ class HomeController extends Controller
                 $confirmed=0;
 
                 $liste = Student::where('user_id','=',auth()->user()->id)->get();
+                $blocked=0;
                 foreach ($liste as $item){
                     $confirmed++;
+                    $blocked=$item->blocked;
                 }
                 $b=Bac::join('students','students.bac_id','=','bacs.id')
-                    ->where('students.id','=',auth()->user()->id)
+                    ->where('students.user_id','=',auth()->user()->id)
                     ->first();
-                return view('welcome',compact('bac','matiere','confirmed','b'));
+                return view('welcome',compact('bac','matiere','confirmed','b','blocked'));
             }
             else if(auth()->user()->role=="Enseignant"){
                 $matiere= Matiere::all();
@@ -48,6 +50,9 @@ class HomeController extends Controller
                     ->where('teachers.user_id','=',auth()->user()->id)
                     ->first();
                 return view('welcome',compact('matiere','confirmed','m'));
+            }
+            else{
+                return redirect('/admin/bacs');
             }
 
         }
@@ -67,7 +72,7 @@ class HomeController extends Controller
         $name = time().rand(1,100).'.'.$file->extension();
         $file->move(public_path('photos'), $name);
         auth()->user()->update([
-                'photo'=>$name
+            'photo'=>$name
         ]);
 
 
